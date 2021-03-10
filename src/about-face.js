@@ -81,13 +81,26 @@ Hooks.once("init", () => {
             // we need to update the existing tokenIndicators with the new sprite type.            
             for (const [key, indicator] of Object.entries(AboutFace.tokenIndicators)) {
                 let token = canvas.tokens.get(key);
+                if (token === undefined) continue;
                 log(LogLevel.INFO, 'game.settings onChange, updating TokenIndicator for:', token.name); 
                 indicator.wipe();       
                 await AboutFace.deleteTokenHandler(canvas.scene, token);
                 await AboutFace.createTokenHandler(canvas.scene, token);                            
             }            
         }
-      });
+      })
+
+    game.settings.register(MODULE_ID, 'move-autorotation', {
+        name: "about-face.options.move-autorotation.name",
+        hint: "about-face.options.move-autorotation.hint",
+        scope: "world",
+        config: true,
+        default: true,
+        type: Boolean,
+        onChange: (value) => {
+            AboutFace.moveAutorotation = value;
+        }
+    });
 });
 
 
@@ -99,6 +112,7 @@ export class AboutFace {
         AboutFace.sceneEnabled = true;
         AboutFace.tokenIndicators = {};
         AboutFace.indicatorState;
+        AboutFace.moveAutorotation = true;
     }
     
     static async canvasReadyHandler() {
@@ -148,7 +162,7 @@ export class AboutFace {
         }
 
         // the GM will observe all movement of tokens and set appropriate flags
-        if (game.user.isGM && (updateData.x != null || updateData.y != null || updateData.rotation != null)) {
+        if (game.user.isGM && (AboutFace.moveAutorotation && (updateData.x != null || updateData.y != null) || updateData.rotation != null)) {
             
             if (updateData.rotation != null) return await AboutFace.setTokenFlag(token, 'direction', updateData.rotation);            
             
