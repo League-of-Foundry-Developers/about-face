@@ -40,6 +40,19 @@ Hooks.once("init", () => {
         }
       });
     
+    game.settings.register(MODULE_ID, 'disable-move-facing', {
+        name: "about-face.options.disable-move-facing.name",
+        hint: "about-face.options.disable-move-facing.hint",
+        scope: "world",
+        config: true,
+        default: false,
+        type: Boolean,
+        onChange: (value) => {
+            if (!canvas.scene) return;
+            if (isFirstActiveGM()) canvas.scene.setFlag(MODULE_ID, 'disableMoveFacing', value);
+        }
+    });
+
       game.settings.register(MODULE_ID, 'indicator-state', {
         name: "about-face.options.enable-indicator.name",
         hint: "about-face.options.enable-indicator.hint",
@@ -232,7 +245,7 @@ export class AboutFace {
             let direction;
             // if it's a rotation update then set the flag on the relevant token
             if (updateData.rotation != null) direction = updateData.rotation;
-            else {
+            else if (!disableMoveFacing) {
                 // else check for movement
                 const lastPos = new PIXI.Point(AboutFace.tokenIndicators[token.id].token.x, AboutFace.tokenIndicators[token.id].token.y);
                 // calculate new position data

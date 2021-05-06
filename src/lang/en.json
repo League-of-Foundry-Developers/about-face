@@ -2,6 +2,8 @@
     "about-face.options.individual-token-text": "Show indicator for this token?",
     "about-face.options.scene-enabled.name": "Enable About Face on this scene",
     "about-face.options.scene-enabled.hint": "Rotates tokens when moving them (except when locked). If disabled, can still hold shift to rotate in place",    
+		"about-face.options.disable-move-facing.name": "Disable movement-based facing",
+		"about-face.options.disable-move-facing.hint": "Disable token rotation when moving. Can still manually rotate indicator in place even when locked.",
     "about-face.options.enable-indicator.name": "Enable token indicators",
     "about-face.options.enable-indicator.hint": "Adds an indicator for direction to tokens",
     "about-face.options.indicator.choices.0": "Never Show",
